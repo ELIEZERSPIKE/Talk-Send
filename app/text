@@ -1,0 +1,27 @@
+// public function Invite(MemberRequest  $request) {
+    
+    //     $user = User::findOrFail($request->user_id);
+        
+    //     $data = [
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'group_id' => $request->group_id
+    //     ];
+    //     try{
+
+    //         $data = $this->authInterface->Invite($data);
+    //     } catch(\Throwable $th){
+    //         DB::rollBack();
+    //         return $th;
+    //         return ApiResponse::rollback($th);
+    //     }
+    
+    //     Mail::to($user->email);
+    
+    //     // return response()->json([
+    //     //     'success' => true,
+    //     //     'message' => 'Utilisateur ajouté au groupe avec succès.',
+           
+    //     //     'user' => $user
+    //     // ], 200);
+    // }
