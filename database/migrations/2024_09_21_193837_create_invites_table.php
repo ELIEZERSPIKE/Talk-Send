@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('invites', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-           
-            $table->string('email')->unique();
-           
-            $table->timestamps();
+           $table->string('email')->unique();
+           $table->timestamps();
         });
     }
 

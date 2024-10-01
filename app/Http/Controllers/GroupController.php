@@ -10,6 +10,7 @@ use App\Mail\GroupMail;
 use App\Mail\OtpCodeMail;
 use App\Models\Group;
 use App\Models\invite;
+use App\Models\MembreGroup;
 use App\Models\OtpCode;
 use App\Models\User;
 use App\Response\ApiResponse;
@@ -31,7 +32,7 @@ class GroupController extends Controller
     
     $data = [
         'name' => $groupregisterRequest->name,
-        'avatar' => $groupregisterRequest->avatar,
+        //  'avatar' => $groupregisterRequest->avatar,
         'description' => $groupregisterRequest->description,
     ];
 
@@ -46,7 +47,8 @@ class GroupController extends Controller
         return ApiResponse::sendResponse(true, [new GroupResource($group)], 'Opération effectuée', 201);
     } catch (\Throwable $th) {
         DB::rollBack(); 
-        return ApiResponse::rollback($th);
+        // return ApiResponse::rollback($th);
+        return $th;
     }
   }
 
@@ -68,10 +70,7 @@ class GroupController extends Controller
     }
 
     
-
-
-
-public function Invite(Request $request, $groupId) {
+public function invite(MemberRequest $request, $groupId) {
     try {
         $group = Group::find($groupId);
 
@@ -81,26 +80,48 @@ public function Invite(Request $request, $groupId) {
 
         $email = $request->input('email');
 
-        $user = invite::where('email', $email)->first();
+        $user = User::where('email', $email)->first();
 
-        if (!$user) {
-            $user = invite::create([
-                'email' => $email,
-                'name' => $request->input('name') ?? 'Invité',
+        if ($user) {
+            MembreGroup::create([
+                'group_id' => $group->id,
+                'user_id' => $user->id,
+                'member_type' => 'user', 
             ]);
 
             Mail::to($user->email)->send(new GroupMail($group));
+
+            return response()->json(['message' => 'Utilisateur inscrit ajouté au groupe et notification envoyée'], 200);
+        } else {
+            // Recherche d'un invité existant
+            $invite = Invite::where('email', $email)->first();
+
+            if (!$invite) {
+                $invite = Invite::create([
+                    'email' => $email,
+                    'name' => $request->input('name') ?? 'Invité',
+                ]);
+            }
+
+            MembreGroup::create([
+                'group_id' => $group->id,
+                'invite_id' => $invite->id,
+                'member_type' => 'invite', 
+            ]);
+
+            // Envoi d'email à l'invité
+            Mail::to($invite->email)->send(new GroupMail($group));
+
+            return response()->json(['message' => 'Invité ajouté au groupe et notification envoyée'], 200);
         }
 
-        $group->invites()->attach($user->id);
-
-         return response()->json(['message' => 'User added to group and notified via email'], 200);
-
     } catch (\Throwable $th) {
-        return $th;
-        // return response()->json(['message' => 'An error occurred', 'error' => $th->getMessage()], 500);
+        return response()->json(['message' => 'Une erreur est survenue', 'error' => $th->getMessage()], 500);
     }
 }
+
+
+
 
 
     

@@ -13,11 +13,15 @@ class invite extends Model
         'email',
     ];
 
-    public function groups() {
-        return $this->belongsToMany(Group::class, 'group_members');
-    }
+    // public function groups() {
+    //     return $this->belongsToMany(Group::class, 'group_members');
+    // }
 
     public function Files(){
         return $this->hasMany(File::class);
+    }
+
+    public function groups(){
+        return $this->hasMany(MembreGroup::class, 'invite_id');
     }
 }

@@ -12,20 +12,42 @@ class Group extends Model
 
     protected $fillable = [
         'name',
+        // 'avatar',
         
         'description',
     ];
 
-    // public function members(): HasMany{
-    //     return $this->hasMany(User::class, 'group_user');
+  
+
+
+    // public function invites() {
+    //     return $this->belongsToMany(invite::class, 'group_members');
     // }
 
 
-    public function invites() {
-        return $this->belongsToMany(invite::class, 'group_members');
-    }
-
     public function Files(){
         return $this->hasMany(File::class);
+     }
+
+    public function members(){
+        return $this->hasMany(MembreGroup::class);
     }
+
+    public function users(){
+  return $this->members->where('member_type', 'user');    
+   }
+
+   public function invites(){
+    return $this->members->where('member_type', 'invite');    
+     }
+
+
+
+
+
+
+
+
+
+
 }

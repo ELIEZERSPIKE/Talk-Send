@@ -26,14 +26,20 @@ Route::prefix('v1.0.0')->group(function()
 
 
 
-    Route::post('group', [GroupController::class, 'Groupregister']);
+     Route::post('group', [GroupController::class, 'Groupregister']);
+
+
+
     Route::get('groups', [GroupController::class, 'index'] );
 
-    // Route::post('AddMember/{id}', [GroupController::class, 'Invite']);
     Route::post('/groups/{groupId}/invite',[GroupController::class, 'Invite'] );
-    Route::post('upload-file/{id}', [FileController::class, 'upload']);
+
+    
+    Route::post('upload-file/{id}',[FileController::class, 'file'] );
 
     Route::get('telecharge/{id}', [FileController::class, 'telecharge']);
+
+
 
 
 

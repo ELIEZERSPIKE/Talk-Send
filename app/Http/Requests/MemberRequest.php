@@ -22,8 +22,8 @@ class MemberRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:groupe_members',
-            'email' => 'required', 
+            'name' => 'required|unique:membre_groups',
+            'email' => 'required|unique:membre_groups', 
         ];
     }
 
@@ -35,7 +35,7 @@ class MemberRequest extends FormRequest
             'name.string' => 'Le nom est une chaine de caractere ',
             'name.max' => 'Le maximum est de 60 caracteres',
             'email.required' => 'E-mail obligatoire',
-            // 'email.unique' => 'Cet e-mail existe deja',
+             'email.unique' => 'Cet e-mail existe deja',
             
         ];
 

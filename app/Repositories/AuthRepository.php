@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Interfaces\AuthInterface;
 use App\Mail\OtpCodeMail;
+use App\Models\File;
 use App\Models\Group;
 use App\Models\OtpCode;
 use App\Models\User;
@@ -93,4 +94,16 @@ class AuthRepository implements AuthInterface
     //   ]); 
     
    
+    public function file(array $data){
+        $file = File::create($data);
+    }
+
+    // public function show_files($goupId){
+    //     $files = [];
+    //     $file = File::where('group_id', $goupId)->get();
+    //     // foreach ($file as $file){
+    //     //     array_push($files, $file);
+    //     // }
+    //     return $file;
+    // }
 }
