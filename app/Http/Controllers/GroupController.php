@@ -32,7 +32,6 @@ class GroupController extends Controller
     
     $data = [
         'name' => $groupregisterRequest->name,
-        //  'avatar' => $groupregisterRequest->avatar,
         'description' => $groupregisterRequest->description,
     ];
 
@@ -53,24 +52,44 @@ class GroupController extends Controller
   }
 
 
-    public function index(){
+    // public function index(){
         
+    //     // Je veux retourner la liste de tous les groupes
+    //     try{
+    //         $groups = Group::all();
+    //         DB::commit();
+    //         // return ApiResponse::sendResponse(true, [new GroupResource($groups)], 'Opération effectuée', 201);
+    //         dd($groups);
+
+    //     } catch(\Throwable $th){
+    //         DB::rollBack();
+    //         // return ApiResponse::rollback($th);
+    //         return $th;
+    //     }
+
+    // }
+    public function index() {
         // Je veux retourner la liste de tous les groupes
-        try{
+        try {
+           
             $groups = Group::all();
-            DB::commit();
-            return ApiResponse::sendResponse(true, [new GroupResource($groups)], 'Opération effectuée', 201);
-
-
-        } catch(\Throwable $th){
-            DB::rollBack();
-            return ApiResponse::rollback($th);
+    
+          
+            return ApiResponse::sendResponse(true, GroupResource::collection($groups), 'Opération effectuée', 200);
+    
+        } catch (\Throwable $th) {
+            return $th;
+            // return ApiResponse::rollback($th);
         }
-
     }
+    
+   
+
+
 
     
-public function invite(MemberRequest $request, $groupId) {
+ public function invite(MemberRequest $request, $groupId) {
+
     try {
         $group = Group::find($groupId);
 
@@ -118,12 +137,22 @@ public function invite(MemberRequest $request, $groupId) {
     } catch (\Throwable $th) {
         return response()->json(['message' => 'Une erreur est survenue', 'error' => $th->getMessage()], 500);
     }
-}
+      }
 
 
 
 
-
+      public function getGroupByName(Request $request)
+      {
+          $name = $request->query('name');
+          $group = Group::where('name', $name)->first();
+  
+          if ($group) {
+              return response()->json(['groups' => [$group]], 200);
+          } else {
+              return response()->json(['message' => 'Groupe non trouvé'], 404);
+          }
+      }
     
 
 

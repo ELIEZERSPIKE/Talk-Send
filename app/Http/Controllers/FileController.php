@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GroupResource;
+use App\Models\ChatFile;
 use App\Models\File;
 use App\Response\ApiResponse;
 use Illuminate\Http\Request;
@@ -10,46 +11,56 @@ use Illuminate\Support\Facades\DB;
 
 class FileController extends Controller
 {
-    // public function upload(Request $request, $id){
-    //     $request->validate([
+    
+
+
+    // public function file(Request $fileRequest,$id){
+    //     $data = [
     //         'file' => 'required|file|mimes:jpg,png,pdf,docx,txt|max:2048',
     //         'group_id' => 'required|exists:groups,id'
-    //     ]);
-
-    //     $file = $request->file('file');
-    //     $path = $file->store('chat_files', 'public');
-        
-    //     $fileModel = new File();
-    //     $fileModel->file_name = $file->getClientOriginalName();
-    //     $fileModel->file_path = $path;
-    //     $fileModel->file_type = $file->getClientMimeType();
-    //     $fileModel->group_id = $request->input('group_id');
-
-    //     $fileModel->user_id = $id;
-    //     $fileModel->save();
-    //     return response()->json([
-    //         'message' => 'Fichier envoye avec success',
-    //         'file' => $fileModel
-    //     ], 201);
+    //     ];
+    
+    //     // Validation des données
+    //     $validatedData = $fileRequest->validate($data);
+    
+    //     DB::beginTransaction();
+    
+    //     try {
+    //         $file = $fileRequest->file('file');
+    //         // $path = $file->store('chat_files', 'public');
+    //         $path = $file->store('chat_files', 'public');
+    //         $fileModel = new File();
+    //         $fileModel->file_name = $file->getClientOriginalName();
+    //          $fileModel->file_path = $path;
+    //         $fileModel->file_type = $file->getClientMimeType();
+    //         $fileModel->group_id = $validatedData['group_id'];
+    //         $fileModel->user_id = $id;    
+    //         $fileModel->save(); 
+    
+    //         DB::commit();
+    
+    //         return ApiResponse::sendResponse(true, [new GroupResource($fileModel)], 'Opération effectuée', 201);
+    //     } catch (\Throwable $th) {
+    //         DB::rollback(); 
+    //         return ApiResponse::rollback($th); 
+    //     }
     // }
-
-
-    public function file(Request $fileRequest,$id)
-    {
-        $data = [
+    
+    public function file(Request $fileRequest, $id) {
+        // Validation des données
+        $validatedData = $fileRequest->validate([
             'file' => 'required|file|mimes:jpg,png,pdf,docx,txt|max:2048',
             'group_id' => 'required|exists:groups,id'
-        ];
-    
-        // Validation des données
-        $validatedData = $fileRequest->validate($data);
+        ]);
     
         DB::beginTransaction();
     
         try {
+            // Récupération du fichier
             $file = $fileRequest->file('file');
             $path = $file->store('chat_files', 'public');
     
+            // Création du modèle de fichier
             $fileModel = new File();
             $fileModel->file_name = $file->getClientOriginalName();
             $fileModel->file_path = $path;
@@ -63,16 +74,20 @@ class FileController extends Controller
             return ApiResponse::sendResponse(true, [new GroupResource($fileModel)], 'Opération effectuée', 201);
         } catch (\Throwable $th) {
             DB::rollback(); 
+            // Log::error('File upload error: ' . $th->getMessage()); // Log l'erreur pour le débogage
             return ApiResponse::rollback($th); 
         }
     }
     
 
    
-    public function index($groupId)
+   
+
+    public function getFiles($groupId)
     {
         $files = File::where('group_id', $groupId)->get();
-        return response()->json($files);
+    
+        return response()->json(['files' => $files], 200);
     }
 
 

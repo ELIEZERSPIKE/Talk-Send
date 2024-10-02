@@ -16,7 +16,7 @@ class Group extends Model
         
         'description',
     ];
-
+//    protected $table = 'groups';
   
 
 

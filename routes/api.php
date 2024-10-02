@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatFileController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\UserController;
@@ -30,16 +31,21 @@ Route::prefix('v1.0.0')->group(function()
 
 
 
-    Route::get('groups', [GroupController::class, 'index'] );
+    // Route::get('/groups', [GroupController::class, 'index']);
+    Route::get('/groups', [GroupController::class, 'index']);
+
+
 
     Route::post('/groups/{groupId}/invite',[GroupController::class, 'Invite'] );
 
     
     Route::post('upload-file/{id}',[FileController::class, 'file'] );
 
-    Route::get('telecharge/{id}', [FileController::class, 'telecharge']);
 
+    Route::get('/group/{groupId}/files', [FileController::class,'getFiles']);
 
+        // Route::get('telecharge/{id}', [FileController::class, 'telecharge']);
+        // Route::get('/groups', [GroupController::class, 'getGroupByName']);
 
 
 
