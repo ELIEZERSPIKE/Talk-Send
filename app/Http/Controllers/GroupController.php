@@ -52,31 +52,12 @@ class GroupController extends Controller
   }
 
 
-    // public function index(){
-        
-    //     // Je veux retourner la liste de tous les groupes
-    //     try{
-    //         $groups = Group::all();
-    //         DB::commit();
-    //         // return ApiResponse::sendResponse(true, [new GroupResource($groups)], 'Opération effectuée', 201);
-    //         dd($groups);
-
-    //     } catch(\Throwable $th){
-    //         DB::rollBack();
-    //         // return ApiResponse::rollback($th);
-    //         return $th;
-    //     }
-
-    // }
     public function index() {
         // Je veux retourner la liste de tous les groupes
         try {
            
             $groups = Group::all();
-    
-          
             return ApiResponse::sendResponse(true, GroupResource::collection($groups), 'Opération effectuée', 200);
-    
         } catch (\Throwable $th) {
             return $th;
             // return ApiResponse::rollback($th);

@@ -11,7 +11,7 @@ class ApiResponse
     
     public static function rollback(
         $e,
-        $message = "Des problème est survenu. Prière de reprendre le processus"
+        $message = "Des problème sont survenus. Prière de reprendre le processus"
     ) {
         DB::rollback();
         self::throw($e, $message);
@@ -19,7 +19,7 @@ class ApiResponse
     
     public static function throw(
         $e,
-        $message = "Des problème d'origine est survenu. Prière de reprendre le processus."
+        $message = "Des problème d'origine sont survenus. Prière de reprendre le processus."
     ) {
         Log::info($e);
         throw new HttpResponseException(response()->json(["message" => $message], 500));

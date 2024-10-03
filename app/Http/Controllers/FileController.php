@@ -75,7 +75,8 @@ class FileController extends Controller
         } catch (\Throwable $th) {
             DB::rollback(); 
             // Log::error('File upload error: ' . $th->getMessage()); // Log l'erreur pour le débogage
-            return ApiResponse::rollback($th); 
+            // return ApiResponse::rollback($th); 
+            return $th;
         }
     }
     
